@@ -17,6 +17,8 @@ public class User implements Serializable {
 
     private Integer roleId;
 
+    private Role role;
+
     public Integer getId() {
         return id;
     }
@@ -65,6 +67,15 @@ public class User implements Serializable {
         this.roleId = roleId;
     }
 
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -74,6 +85,7 @@ public class User implements Serializable {
                 ", email='" + email + '\'' +
                 ", ticket='" + ticket + '\'' +
                 ", roleId=" + roleId +
+                ", role=" + role +
                 '}';
     }
 }

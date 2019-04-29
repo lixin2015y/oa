@@ -6,4 +6,5 @@ public interface UserDao {
 
     int updateUserTicket(User user);
 
+    User selectUserByTicket(String ticket);
 }

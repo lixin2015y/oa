@@ -5,4 +5,20 @@
         where username = #{userName}
         and password = #{password}
     </update>
+
+    <resultMap id="userMap" type="User">
+        <id column="id" property="id"></id>
+        <result column="username" property="userName"></result>
+        <result column="password" property="password"></result>
+        <result column="email" property="email"></result>
+        <result column="roleid" property="roleId"></result>
+        <association property="role" javaType="Role">
+            <id column="roleid" property="id"></id>
+            <result column="auth" property="auth"></result>
+        </association>
+    </resultMap>
+    <select id="selectUserByTicket" parameterType="java.lang.String" resultMap="userMap">
+        select user.*,role.auth from user left join role on user.roleid = role.id
+        where ticket = #{ticket}
+    </select>
 </mapper>
