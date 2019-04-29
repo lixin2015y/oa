@@ -17,6 +17,10 @@
         <setting name="useGeneratedKeys" value="true"/>
     </settings>
 
+    <typeAliases>
+        <package name="com.lee.entity"/>
+    </typeAliases>
+
     <!-- Continue going here -->
 
 </configuration>
