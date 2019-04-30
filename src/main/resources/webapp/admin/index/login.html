@@ -57,11 +57,13 @@
         var form = layui.form(),
             layer = layui.layer;
         form.on('submit(login)', function (data) {
+            var load_index = layer.load(0, {shade: [0.2, '#393D49']});
             $.ajax(ip + 'login/login', {
                 dataType: 'json',
                 type: 'post',
                 data: data.field
             }).done(function (data) {
+                layer.close(load_index);
                 if (data.code == '0') {
                     // layer.alert(data.message, {
                     //     icon: 1,

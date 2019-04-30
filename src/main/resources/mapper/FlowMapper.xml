@@ -1,0 +1,7 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lee.dao.FlowDao">
+    <insert id="insertService" parameterType="Service">
+        insert into service(id, title, urgent, appendix, userid, flowid, status)
+        values (#{id}, #{title}, #{urgent}, #{appendix}, #{userId}, #{flowId}, #{status})
+    </insert>
+</mapper>
