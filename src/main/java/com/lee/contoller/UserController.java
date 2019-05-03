@@ -6,8 +6,10 @@ import com.lee.model.HostHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("user")
+@RestController
 public class UserController {
 
     @Autowired
@@ -15,7 +17,6 @@ public class UserController {
 
     @PostMapping("getUser")
     ResponseMessage getUser() {
-        
         return Result.success(hostHolder.getUser());
     }
 

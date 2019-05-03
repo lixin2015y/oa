@@ -1,5 +1,7 @@
 package com.lee.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -15,6 +17,7 @@ public class Service implements Serializable {
 
     private String appendix;
 
+    @JSONField(name = "creationtime", format = "yyyy-MM-dd HH点mm分")
     private Date creationtime;
 
     private Integer userId;
@@ -22,6 +25,17 @@ public class Service implements Serializable {
     private Integer flowId;
 
     private String status;
+
+    private Flow flow;
+
+
+    public Flow getFlow() {
+        return flow;
+    }
+
+    public void setFlow(Flow flow) {
+        this.flow = flow;
+    }
 
     public Integer getId() {
         return id;

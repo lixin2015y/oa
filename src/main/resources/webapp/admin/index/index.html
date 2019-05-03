@@ -21,7 +21,7 @@
             <li class="layui-nav-item layui-nav-itemed">
                 <a href="javascript:;"><i class="iconfont">&#xe607;</i>新建流程</a>
                 <dl class="layui-nav-child">
-                    <dd><a href="javascript:;" data-url="administration.html" data-id='1' data-text="行政审批"><span
+                    <dd><a href="javascript:;" data-url="add-flow.html" data-id='1' data-text="行政审批"><span
                             class="l-line"></span>行政管理</a></dd>
                 </dl>
                 <dl class="layui-nav-child">
@@ -40,24 +40,11 @@
             <li class="layui-nav-item">
                 <a href="javascript:;"><i class="iconfont">&#xe608;</i>查询流程</a>
                 <dl class="layui-nav-child">
-                    <dd><a href="javascript:;" data-url="article-list.html" data-id='3' data-text="查询流程"><span
+                    <dd><a href="javascript:;" data-url="flow-list.html" data-id='3' data-text="查询流程"><span
                             class="l-line"></span>查询流程</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item">
-                <a href="javascript:;"><i class="iconfont">&#xe604;</i>流程监控</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="javascript:;" data-url="article-list.html" data-id='3' data-text="流程监控"><span
-                            class="l-line"></span>流程监控</a></dd>
-                </dl>
-            </li>
-            <!--            <li class="layui-nav-item">-->
-            <!--                <a href="javascript:;"><i class="iconfont">&#xe631;</i>待我审批</a>-->
-            <!--                <dl class="layui-nav-child">-->
-            <!--                    <dd><a href="javascript:;" data-url="article-list.html" data-id='3' data-text="审批"><span-->
-            <!--                            class="l-line"></span>待我审批</a></dd>-->
-            <!--                </dl>-->
-            <!--            </li>-->
+            <div id="auth_flow_view"></div>
         </ul>
     </div>
     <!--右侧内容-->
@@ -74,9 +61,9 @@
                 <!--                    <a href="javascript:;" data-url="email.html" data-id='4' data-text="邮件系统"><i class="iconfont">&#xe603;</i></a>-->
                 <!--                </li>-->
                 <li class="layui-nav-item">
-                    <a href="javascript:;" data-url="admin-info.html" data-id='5' data-text="个人信息">超级管理员</a>
+                    <div id="user_view"></div>
                 </li>
-                <li class="layui-nav-item"><a href="javascript:;">退出</a></li>
+                <li class="layui-nav-item"><a href="/login/logout">退出</a></li>
             </ul>
         </div>
         <div class="main-layout-body">
@@ -106,6 +93,69 @@
 <script src="../../static/admin/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 <script src="../../static/admin/js/common.js" type="text/javascript" charset="utf-8"></script>
 <script src="../../static/admin/js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="jquery-1.7.2.min.js"></script>
+<script type="text/html" id="auth_flow_temp">
+    {{#  if(d.data.role.auth > 1){ }}
+    <li class="layui-nav-item">
+        <a href="javascript:;"><i class="iconfont">&#xe604;</i>流程监控</a>
+        <dl class="layui-nav-child">
+            <dd><a href="javascript:;" data-url="flow-monitor.html" data-id='3' data-text="流程监控"><span
+                    class="l-line"></span>流程监控</a></dd>
+        </dl>
+    </li>
+    <li class="layui-nav-item">
+        <a href="javascript:;"><i class="iconfont">&#xe631;</i>待我审批</a>
+        <dl class="layui-nav-child">
+            <dd><a href="javascript:;" data-url="flow.html" data-id='3' data-text="审批"><span
+                    class="l-line"></span>待我审批</a></dd>
+        </dl>
+    </li>
+    {{#  } }}
 
+</script>
+<script type="text/html" id="user_temp">
+    <a href="javascript:;" data-text="个人信息">{{d.data.userName}}({{d.data.role.auth}})</a>
+</script>
+<script>
+    $(function () {
+        layui.use(['laytpl'], function () {
+            var laytpl = layui.laytpl;
+            $.ajax(ip + 'user/getUser', {
+                dataType: 'json',
+                type: 'post'
+            }).done(function (data) {
+                if (data.code == '0') {
+                    var auth_flow_temp = document.getElementById('auth_flow_temp').innerHTML;
+                    laytpl(auth_flow_temp).render(data, function (html) {
+                        document.getElementById('auth_flow_view').innerHTML = html;
+                    });
+                    switch (data.data.role.auth) {
+                        case '1':
+                            data.data.role.auth = '员工';
+                            break;
+                        case '2':
+                            data.data.role.auth = '经理';
+                            break;
+                        case '3':
+                            data.data.role.auth = '部长';
+                            break;
+                        default:
+                            data.data.role.auth = '未知身份';
+                            break;
+                    }
+                    var user_temp = document.getElementById('user_temp').innerHTML;
+                    laytpl(user_temp).render(data, function (html) {
+                        document.getElementById('user_view').innerHTML = html;
+                    });
+                } else {
+                    layer.alert(data.message, {
+                        icon: 5,
+                        title: "提示"
+                    });
+                }
+            })
+        })
+    })
+</script>
 </body>
 </html>

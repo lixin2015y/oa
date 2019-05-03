@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
 @RequestMapping("flow")
 @RestController
 public class FlowController {
@@ -26,6 +30,7 @@ public class FlowController {
 
         User user = hostHolder.getUser();
         service.setUserId(user.getId());
+        service.setCreationtime(new Date());
         service.setStatus("待审批");
         try {
             flowService.apply(service);
@@ -35,10 +40,14 @@ public class FlowController {
         return Result.success();
     }
 
-    @PostMapping("getMyLaunchFlow")
-    ResponseMessage getMyLaunchFlow() {
-
-        return Result.success();
+    @PostMapping("getMyFlow")
+    ResponseMessage getMyLaunchFlow(Integer pageNum, Integer pageSize, String title, String urgent, String flowTitle, String status) {
+        User user = hostHolder.getUser();
+        List<Service> serviceList = flowService.getService(user, pageNum, pageSize, title, urgent, flowTitle, status);
+        HashMap<Object, Object> map = new HashMap<>();
+        map.put("list", serviceList);
+        map.put("count", flowService.getCountService(user.getId(), title, urgent, flowTitle, status));
+        return Result.success(map);
     }
 
     @PostMapping("getFlowToMe")

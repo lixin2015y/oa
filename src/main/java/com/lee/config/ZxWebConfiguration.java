@@ -29,8 +29,10 @@ public class ZxWebConfiguration implements WebMvcConfigurer {
         addPatterns.add("/admin/index/*.html");
         addPatterns.add("/user/**");
         addPatterns.add("/flow/**");
+        addPatterns.add("/login/**");
         List<String> excludePatterns = new ArrayList<String>();
         excludePatterns.add("/admin/index/login.html");
+        excludePatterns.add("/login/login");
         registry.addInterceptor(passportInterceptor)
                 .addPathPatterns(addPatterns)
                 .excludePathPatterns(excludePatterns);

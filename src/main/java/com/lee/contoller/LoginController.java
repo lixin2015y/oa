@@ -10,12 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -59,6 +58,16 @@ public class LoginController {
         valueOperations.set(ticket, user, 1800, TimeUnit.SECONDS);
 
         return Result.success();
+    }
+
+    @GetMapping("logout")
+    void logout(@CookieValue(name = "ticket") String ticket, HttpServletResponse response) {
+        redisTemplate.delete(ticket);
+        try {
+            response.sendRedirect("/admin/index/login.html");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

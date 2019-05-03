@@ -1,7 +1,65 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lee.dao.FlowDao">
     <insert id="insertService" parameterType="Service">
-        insert into service(id, title, urgent, appendix, userid, flowid, status)
-        values (#{id}, #{title}, #{urgent}, #{appendix}, #{userId}, #{flowId}, #{status})
+        insert into service(id, title, urgent, appendix, creationtime, userid, flowid, status)
+        values (#{id}, #{title}, #{urgent}, #{appendix}, #{creationtime}, #{userId}, #{flowId}, #{status})
     </insert>
+
+
+    <resultMap id="selectServiceMap" type="Service">
+        <id column="id" property="id"></id>
+        <result column="title" property="title"></result>
+        <result column="urgent" property="urgent"></result>
+        <result column="appendix" property="appendix"></result>
+        <result column="creationtime" property="creationtime"></result>
+        <result column="userid" property="userId"></result>
+        <result column="flowid" property="flowId"></result>
+        <result column="status" property="status"></result>
+        <association property="flow" javaType="Flow">
+            <id column="id1" property="id"></id>
+            <result column="title1" property="title"></result>
+            <result column="creationtime1" property="creationtime"></result>
+        </association>
+    </resultMap>
+    <select id="selectService" resultMap="selectServiceMap" parameterType="java.lang.Integer">
+        select service.*,flow.id id1, flow.title title1, flow.creationtime creationtime1
+        from service,flow
+        where service.flowid = flow.id
+        and
+        service.userid = #{userId}
+        <if test="title!=null and title != ''">
+            and service.title like concat(concat('%',#{title}),'%')
+        </if>
+        <if test="urgent!=null and urgent != ''">
+            and service.urgent = #{urgent}
+        </if>
+        <if test="flowTitle!=null and flowTitle != ''">
+            and flow.title = #{flowTitle}
+        </if>
+        <if test="status!=null and status != ''">
+            and service.status = #{status}
+        </if>
+        order by service.creationtime desc
+        limit #{offset}, #{pageSize}
+    </select>
+
+    <select id="selectCountService" resultType="java.lang.Integer">
+        select count(*)
+        from service,flow
+        where service.flowid = flow.id
+        and
+        service.userid = #{userId}
+        <if test="title!=null and title != ''">
+            and service.title like concat(concat('%',#{title}),'%')
+        </if>
+        <if test="urgent!=null and urgent != ''">
+            and service.urgent = #{urgent}
+        </if>
+        <if test="flowTitle!=null and flowTitle != ''">
+            and flow.title = #{flowTitle}
+        </if>
+        <if test="status!=null and status != ''">
+            and service.status = #{status}
+        </if>
+    </select>
 </mapper>
