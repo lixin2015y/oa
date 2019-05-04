@@ -61,8 +61,8 @@ public class LoginController {
     }
 
     @GetMapping("logout")
-    void logout(@CookieValue(name = "ticket") String ticket, HttpServletResponse response) {
-        redisTemplate.delete(ticket);
+    void logout(@CookieValue(name = "ticket", required = false) String ticket, HttpServletResponse response) {
+//        redisTemplate.delete(ticket);
         try {
             response.sendRedirect("/admin/index/login.html");
         } catch (IOException e) {

@@ -1,6 +1,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lee.dao.FlowDao">
-    <insert id="insertService" parameterType="Service">
+    <insert id="insertService" parameterType="Service" useGeneratedKeys="true" keyProperty="id">
         insert into service(id, title, urgent, appendix, creationtime, userid, flowid, status)
         values (#{id}, #{title}, #{urgent}, #{appendix}, #{creationtime}, #{userId}, #{flowId}, #{status})
     </insert>
@@ -61,5 +61,50 @@
         <if test="status!=null and status != ''">
             and service.status = #{status}
         </if>
+    </select>
+
+    <select id="selectAllNode" parameterType="Service" resultType="Node">
+        SELECT
+            *
+        FROM
+            node
+        WHERE
+            node.flowid = #{flowId}
+        ORDER BY
+            node.`order` DESC
+    </select>
+
+    <insert id="insertProcess" parameterType="Process">
+        insert into process(id, status, nodeid, serviceId, creationtime)
+        values (#{id}, #{status}, #{nodeId}, #{serviceId}, #{creationtime})
+    </insert>
+
+
+    <select id="selectApplyToMe" parameterType="java.lang.Integer" resultType="ApplyToMeVo">
+        SELECT
+            service.*, flow.title flowTitle,process.id processId,service.id serviceId
+        FROM
+            node,
+            process,
+            service,
+            flow
+        WHERE
+            node.id = process.nodeid
+        AND service.id = process.serviceid
+        AND flow.id = service.flowid
+        AND process.`status` IS NULL
+        AND node.userid = #{id}
+    </select>
+
+    <update id="updateServiceStatus">
+        update service set status = #{status} where id = #{id}
+    </update>
+
+    <update id="updateProcessStatus">
+        update process set status = #{status} where id = #{id}
+    </update>
+
+    <select id="selectProcessById" parameterType="java.lang.Integer" resultType="Process">
+        select * from process where id = #{processId}
     </select>
 </mapper>

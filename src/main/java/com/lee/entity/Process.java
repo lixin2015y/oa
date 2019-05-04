@@ -15,7 +15,7 @@ public class Process implements Serializable {
 
     private Integer userId;
 
-    private Integer flowId;
+    private Integer serviceId;
 
     private Date creationtime;
 
@@ -51,12 +51,12 @@ public class Process implements Serializable {
         this.userId = userId;
     }
 
-    public Integer getFlowId() {
-        return flowId;
+    public Integer getServiceId() {
+        return serviceId;
     }
 
-    public void setFlowId(Integer flowId) {
-        this.flowId = flowId;
+    public void setServiceId(Integer serviceId) {
+        this.serviceId = serviceId;
     }
 
     public Date getCreationtime() {
@@ -74,7 +74,7 @@ public class Process implements Serializable {
                 ", status='" + status + '\'' +
                 ", nodeId=" + nodeId +
                 ", userId=" + userId +
-                ", flowId=" + flowId +
+                ", serviceId=" + serviceId +
                 ", creationtime=" + creationtime +
                 '}';
     }

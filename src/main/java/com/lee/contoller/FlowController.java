@@ -2,6 +2,7 @@ package com.lee.contoller;
 
 import com.lee.common.ResponseMessage;
 import com.lee.common.Result;
+import com.lee.common.ZxException;
 import com.lee.entity.Service;
 import com.lee.entity.User;
 import com.lee.model.HostHolder;
@@ -35,6 +36,7 @@ public class FlowController {
         try {
             flowService.apply(service);
         } catch (Exception e) {
+            e.printStackTrace();
             return Result.error();
         }
         return Result.success();
@@ -54,15 +56,20 @@ public class FlowController {
     ResponseMessage getFlowToMe() {
 
         User user = hostHolder.getUser();
-        
-
-        return Result.success();
+        List<Service> applyToMe = flowService.getApplyTome(user);
+        return Result.success(applyToMe);
     }
 
 
     @PostMapping("approval")
-    ResponseMessage approval() {
+    ResponseMessage approval(Integer processId, String status, Integer serviceId) {
 
+        try {
+            flowService.approval(processId, status, serviceId);
+        } catch (ZxException e) {
+            e.printStackTrace();
+            return Result.error("-1", e.getMessage());
+        }
         return Result.success();
     }
 

@@ -1,6 +1,7 @@
 import com.lee.MainApplication;
 import com.lee.dao.UserDao;
 import com.lee.entity.User;
+import com.lee.service.FlowService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,19 @@ public class TotalTest {
     @Autowired
     UserDao userDao;
 
+    @Autowired
+    FlowService flowService;
+
     @Test
     public void test1() {
         User user = userDao.selectUserByTicket("b50c6c61-e195-4599-9");
         System.out.println(user);
     }
 
+
+    @Test
+    public void test2() {
+    }
 
 
 }
