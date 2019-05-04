@@ -53,12 +53,18 @@ public class FlowController {
     @PostMapping("getFlowToMe")
     ResponseMessage getFlowToMe() {
 
+        User user = hostHolder.getUser();
+        
+
         return Result.success();
     }
 
-    @PostMapping("putFlow")
-    ResponseMessage putFlow() {
+
+    @PostMapping("approval")
+    ResponseMessage approval() {
+
         return Result.success();
     }
+
 
 }

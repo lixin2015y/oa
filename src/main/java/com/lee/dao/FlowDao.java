@@ -27,4 +27,6 @@ public interface FlowDao {
                                @Param("urgent") String urgent,
                                @Param("flowTitle") String flowTitle,
                                @Param("status") String status);
+
+    Integer insetProcess();
 }

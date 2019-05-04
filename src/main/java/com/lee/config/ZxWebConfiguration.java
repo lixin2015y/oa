@@ -24,7 +24,7 @@ public class ZxWebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(userInfoInterceptor).addPathPatterns("/**");
+
         List<String> addPatterns = new ArrayList<String>();
         addPatterns.add("/admin/index/*.html");
         addPatterns.add("/user/**");
@@ -33,6 +33,9 @@ public class ZxWebConfiguration implements WebMvcConfigurer {
         List<String> excludePatterns = new ArrayList<String>();
         excludePatterns.add("/admin/index/login.html");
         excludePatterns.add("/login/login");
+        registry.addInterceptor(userInfoInterceptor)
+                .addPathPatterns(addPatterns)
+                .excludePathPatterns(excludePatterns);
         registry.addInterceptor(passportInterceptor)
                 .addPathPatterns(addPatterns)
                 .excludePathPatterns(excludePatterns);

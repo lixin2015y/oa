@@ -5,9 +5,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author lee
- * @version 1.0
- * @date 2018/12/13 15:42
- * @description TODO
  **/
 @Component
 public class HostHolder {

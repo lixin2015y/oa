@@ -95,30 +95,30 @@
 <script src="../../static/admin/js/main.js" type="text/javascript" charset="utf-8"></script>
 <script src="jquery-1.7.2.min.js"></script>
 <script type="text/html" id="auth_flow_temp">
-    {{#  if(d.data.role.auth > 1){ }}
+
+    {{# if(d.data.role.auth > 1){ }}
     <li class="layui-nav-item">
         <a href="javascript:;"><i class="iconfont">&#xe604;</i>流程监控</a>
         <dl class="layui-nav-child">
-            <dd><a href="javascript:;" data-url="flow-monitor.html" data-id='3' data-text="流程监控"><span
+            <dd><a href="javascript:;" data-url="flow-monitor.html" data-id='4'  data-text="流程监控"><span
                     class="l-line"></span>流程监控</a></dd>
         </dl>
     </li>
     <li class="layui-nav-item">
-        <a href="javascript:;"><i class="iconfont">&#xe631;</i>待我审批</a>
+        <a href="javascript:;"><i class="iconfont">&#xe605;</i>待我审批</a>
         <dl class="layui-nav-child">
-            <dd><a href="javascript:;" data-url="flow.html" data-id='3' data-text="审批"><span
+            <dd><a href="javascript:;" data-url="flow.html" data-id='5' data-text="审批"><span
                     class="l-line"></span>待我审批</a></dd>
         </dl>
     </li>
-    {{#  } }}
-
+    {{# } }}
 </script>
 <script type="text/html" id="user_temp">
     <a href="javascript:;" data-text="个人信息">{{d.data.userName}}({{d.data.role.auth}})</a>
 </script>
 <script>
     $(function () {
-        layui.use(['laytpl'], function () {
+        layui.use(['laytpl', 'element'], function () {
             var laytpl = layui.laytpl;
             $.ajax(ip + 'user/getUser', {
                 dataType: 'json',
@@ -147,6 +147,7 @@
                     laytpl(user_temp).render(data, function (html) {
                         document.getElementById('user_view').innerHTML = html;
                     });
+                    layui.element().init();
                 } else {
                     layer.alert(data.message, {
                         icon: 5,
