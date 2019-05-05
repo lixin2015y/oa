@@ -5,6 +5,7 @@ import com.lee.dao.FlowDao;
 import com.lee.entity.Node;
 import com.lee.entity.Process;
 import com.lee.entity.User;
+import org.assertj.core.error.ShouldBeInSameYear;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +48,7 @@ public class FlowService {
     }
 
     @Transactional
-    public void approval(Integer processId, String status, Integer serviceId) throws ZxException {
+    public void approval(Integer processId, String status, Integer serviceId, Integer flowId) throws ZxException {
         switch (status) {
             case "1":
                 //修改状态
@@ -56,9 +57,9 @@ public class FlowService {
                 flowDao.updateProcessStatus(processId, status);
                 //拿到所有节点
                 com.lee.entity.Service service = new com.lee.entity.Service();
-                service.setId(serviceId);
+                service.setFlowId(flowId);
                 List<Node> nodes = flowDao.selectAllNode(service);
-                Node next = new Node();
+                Node next = null;
                 Process process = flowDao.selectProcessById(processId);
                 for (int i = 0; i < nodes.size(); i++) {
                     if (nodes.get(i).getId() == process.getNodeId()) {
@@ -68,15 +69,26 @@ public class FlowService {
                         }
                     }
                 }
+                System.out.println(next);
                 //当前节点是最后节点
                 if (next == null) {
-                    
+                    //更新业务状态
+                    flowDao.updateServiceStatus(serviceId, "审批通过");
+                } else {
+                    //不是最后节点则下一节点process
+                    Process nextProcess = new Process();
+                    nextProcess.setNodeId(next.getId());
+                    nextProcess.setServiceId(serviceId);
+                    nextProcess.setCreationtime(new Date());
+                    flowDao.insertProcess(nextProcess);
                 }
-
-
                 break;
             case "0":
-
+                //未通过当前节点
+                //修改状态
+                flowDao.updateServiceStatus(serviceId, "已拒绝");
+                //更新进程
+                flowDao.updateProcessStatus(processId, status);
                 break;
             default:
                 throw new ZxException(-1, "值错误");

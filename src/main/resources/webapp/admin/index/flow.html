@@ -49,11 +49,11 @@
             <td>{{item.flowTitle}}</td>
             <td>
                 <button type="button" class="layui-btn layui-btn-mini layui-btn-normal"
-                        onclick="flow('{{item.title}}',1,'{{item.serviceId}}')">
+                        onclick="flow('{{item.processId}}',1,'{{item.serviceId}}','{{item.flowId}}')">
                     通过
                 </button>
                 <button type="button" class="layui-btn layui-btn-mini layui-btn-danger"
-                        onclick="flow('{{item.title}}',0,'{{item.serviceId}}')">
+                        onclick="flow('{{item.processId}}',0,'{{item.serviceId}}','{{item.flowId}}')">
                     拒绝
                 </button>
             </td>
@@ -92,8 +92,45 @@
         })
     }
 
-    function flow(processId, status) {
-        //status默认1通过 0不通过
+    function flow(processId, status, serviceId, flowId) {
+        if (status == 1) {
+            confirm_message = '通过该申请';
+        } else if (status == 0) {
+            confirm_message = '拒绝该申请';
+        }
+        layer.confirm(confirm_message, {
+                btn: ['确定', '取消'],
+                offset: '100px',
+                yes: function (index, layero) {
+                    $.ajax(ip + 'flow/approval', {
+                        dataType: 'json',
+                        type: 'post',
+                        data: {
+                            'processId': processId,
+                            'status': status,
+                            'serviceId': serviceId,
+                            'flowId': flowId
+                        }
+                    }).done(function (data) {
+                        layer.close(index)
+                        if (data.code == '0') {
+                            show();
+                        } else {
+                            layer.alert(data.message, {
+                                icon: 5,
+                                title: "提示"
+                            });
+                        }
+                    })
+                }, btn2: function (index, layero) {
+                    layer.close(index)
+                },
+                cancel: function (index, layero) {
+                    layer.close(index)
+                }
+            }
+        );
+
 
     }
 

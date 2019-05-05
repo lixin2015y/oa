@@ -62,10 +62,10 @@ public class FlowController {
 
 
     @PostMapping("approval")
-    ResponseMessage approval(Integer processId, String status, Integer serviceId) {
+    ResponseMessage approval(Integer processId, String status, Integer serviceId, Integer flowId) {
 
         try {
-            flowService.approval(processId, status, serviceId);
+            flowService.approval(processId, status, serviceId, flowId);
         } catch (ZxException e) {
             e.printStackTrace();
             return Result.error("-1", e.getMessage());
