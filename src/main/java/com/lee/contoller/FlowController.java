@@ -3,7 +3,9 @@ package com.lee.contoller;
 import com.lee.common.ResponseMessage;
 import com.lee.common.Result;
 import com.lee.common.ZxException;
+import com.lee.entity.Node;
 import com.lee.entity.Service;
+import com.lee.entity.ServiceVo;
 import com.lee.entity.User;
 import com.lee.model.HostHolder;
 import com.lee.service.FlowService;
@@ -48,13 +50,12 @@ public class FlowController {
         List<Service> serviceList = flowService.getService(user, pageNum, pageSize, title, urgent, flowTitle, status);
         HashMap<Object, Object> map = new HashMap<>();
         map.put("list", serviceList);
-        map.put("count", flowService.getCountService(user.getId(), title, urgent, flowTitle, status));
+        map.put("count", flowService.getCountService(user, title, urgent, flowTitle, status));
         return Result.success(map);
     }
 
     @PostMapping("getFlowToMe")
     ResponseMessage getFlowToMe() {
-
         User user = hostHolder.getUser();
         List<Service> applyToMe = flowService.getApplyTome(user);
         return Result.success(applyToMe);
@@ -71,6 +72,37 @@ public class FlowController {
             return Result.error("-1", e.getMessage());
         }
         return Result.success();
+    }
+
+
+    @PostMapping("getServiceMonitor")
+    ResponseMessage getServiceMonitor(Integer pageNum, Integer pageSize, String title, String urgent, String flowTitle, String status) {
+        List<ServiceVo> serviceList = flowService.getServiceMonitor(pageNum, pageSize, title, urgent, flowTitle, status);
+        HashMap<Object, Object> map = new HashMap<>();
+        for (ServiceVo serviceVo : serviceList) {
+            switch (serviceVo.getStatus()) {
+                case "待审批":
+                case "审批通过":
+                    //展示所有节点
+                    List<Node> allNode = flowService.getAllNode(serviceVo.getFlowId());
+                    StringBuilder nodeProcess = new StringBuilder();
+                    for (Node node : allNode) {
+                        nodeProcess.append(node.getName() + "->");
+                    }
+                    serviceVo.setNodeProcess(nodeProcess.toString());
+                    break;
+                case "已拒绝":
+                case "审批中":
+                    Node currentNode = flowService.getCurrentNode(serviceVo.getId());
+                    serviceVo.setNodeProcess(currentNode.getName());
+                    break;
+                default:
+                    return Result.error();
+            }
+        }
+        map.put("list", serviceList);
+        map.put("count", flowService.getCountServiceMonitor(title, urgent, flowTitle, status));
+        return Result.success(map);
     }
 
 

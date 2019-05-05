@@ -7,12 +7,14 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.HttpMessageConverter;
 
 @MapperScan(basePackages = "com.lee.dao")
 @SpringBootApplication
-public class MainApplication {
+public class MainApplication extends SpringBootServletInitializer {
     @Bean
     public HttpMessageConverters fastJsonHttpMessageConverters() {
         //1. 需要定义一个converter转换消息的对象
@@ -27,6 +29,12 @@ public class MainApplication {
         HttpMessageConverter<?> converter = fasHttpMessageConverter;
         return new HttpMessageConverters(converter);
     }
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(MainApplication.class);
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(MainApplication.class, args);
     }

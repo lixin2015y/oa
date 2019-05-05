@@ -39,8 +39,16 @@ public class FlowService {
         return flowDao.selectService(user.getId(), pageSize * (pageNum - 1), pageSize, title, urgent, flowTitle, status);
     }
 
-    public Integer getCountService(Integer userId, String title, String urgent, String flowTitle, String status) {
-        return flowDao.selectCountService(userId, title, urgent, flowTitle, status);
+    public List<com.lee.entity.ServiceVo> getServiceMonitor(Integer pageNum, Integer pageSize, String title, String urgent, String flowTitle, String status) {
+        return flowDao.selectServiceMonitor(pageSize * (pageNum - 1), pageSize, title, urgent, flowTitle, status);
+    }
+
+    public Integer getCountService(User user, String title, String urgent, String flowTitle, String status) {
+        return flowDao.selectCountService(user.getId(), title, urgent, flowTitle, status);
+    }
+
+    public Integer getCountServiceMonitor(String title, String urgent, String flowTitle, String status) {
+        return flowDao.selectCountServiceMonitor(title, urgent, flowTitle, status);
     }
 
     public List<com.lee.entity.Service> getApplyTome(User user) {
@@ -93,5 +101,15 @@ public class FlowService {
             default:
                 throw new ZxException(-1, "值错误");
         }
+    }
+
+    public List<Node> getAllNode(Integer flowId) {
+        com.lee.entity.Service service = new com.lee.entity.Service();
+        service.setFlowId(flowId);
+        return flowDao.selectAllNode(service);
+    }
+
+    public Node getCurrentNode(Integer serviceId) {
+        return flowDao.selectCurrentNode(serviceId);
     }
 }

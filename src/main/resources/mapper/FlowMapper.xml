@@ -107,4 +107,66 @@
     <select id="selectProcessById" parameterType="java.lang.Integer" resultType="Process">
         select * from process where id = #{processId}
     </select>
+
+
+    <resultMap id="selectServiceMonitorMap" type="ServiceVo">
+        <id column="id" property="id"></id>
+        <result column="title" property="title"></result>
+        <result column="urgent" property="urgent"></result>
+        <result column="appendix" property="appendix"></result>
+        <result column="creationtime" property="creationtime"></result>
+        <result column="userid" property="userId"></result>
+        <result column="flowid" property="flowId"></result>
+        <result column="status" property="status"></result>
+        <association property="flow" javaType="Flow">
+            <id column="id1" property="id"></id>
+            <result column="title1" property="title"></result>
+            <result column="creationtime1" property="creationtime"></result>
+        </association>
+    </resultMap>
+    <select id="selectServiceMonitor" resultMap="selectServiceMonitorMap" parameterType="java.lang.Integer">
+        select service.*,flow.id id1, flow.title title1, flow.creationtime creationtime1
+        from service,flow
+        where service.flowid = flow.id
+        <if test="title!=null and title != ''">
+            and service.title like concat(concat('%',#{title}),'%')
+        </if>
+        <if test="urgent!=null and urgent != ''">
+            and service.urgent = #{urgent}
+        </if>
+        <if test="flowTitle!=null and flowTitle != ''">
+            and flow.title = #{flowTitle}
+        </if>
+        <if test="status!=null and status != ''">
+            and service.status = #{status}
+        </if>
+        order by service.creationtime desc
+        limit #{offset}, #{pageSize}
+    </select>
+
+    <select id="selectCountServiceMonitor" resultType="java.lang.Integer">
+        select count(*)
+        from service,flow
+        where service.flowid = flow.id
+        <if test="title!=null and title != ''">
+            and service.title like concat(concat('%',#{title}),'%')
+        </if>
+        <if test="urgent!=null and urgent != ''">
+            and service.urgent = #{urgent}
+        </if>
+        <if test="flowTitle!=null and flowTitle != ''">
+            and flow.title = #{flowTitle}
+        </if>
+        <if test="status!=null and status != ''">
+            and service.status = #{status}
+        </if>
+    </select>
+
+    <select id="selectCurrentNode" parameterType="java.lang.Integer" resultType="Node">
+        select node.* from process,node
+        where node.id = process.nodeid
+        and process.serviceid = #{serviceId}
+        order by creationtime desc
+        limit 1
+    </select>
 </mapper>
